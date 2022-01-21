@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Vue 3 Basics</title>
+    <!-- Box Styling  -->
+    <style>
+      .box{
+        background-color: lightgreen;
+        height: 200px;
+        width: 200px;
+      }
+      .box.two{
+        background-color: red;
+      }
+      .box.three{
+        background-color: darkblue;
+      }
+
+      input{
+        margin: 10px;
+        display: block;
+      }
+      /* the cloak stops to the vue.js app from loading unwanted content */
+      v-cloak{
+        display: none;
+      }
+
+    </style>
+  </head>
+  <body>
+    <!-- to use vue.js you can use a div to link your vue.js app code to the HTML body -->
+    <div id="app" v-cloak>
+      <!-- Templating in Vue.js "Double-Mustashe / Double Curly Brackets" -->
+      <!-- {{ greeting }}
+      <input @keyup.enter="greet(greeting + '!!!!!!!!!')" v-model="greeting" /> -->
+
+      <login-form />
+
+      <hr />
+
+      <!-- toggle button applied to @ click function and assigned to the method toggleBox  -->
+      <!-- conneted to div named v-if isVisible and class box (shows if colored box is turned on or off) -->
+      <button @click="toggleBox"> Toggle Box</button>
+
+      <!-- You cna use if/if-else/else within vue.js with (v-if="VARIBLE-NAME") -->
+      <!-- You cna use if/if-else/else within vue.js with (v-if-else="VARIBLE-NAME") -->
+      <!-- You cna use if/if-else/else within vue.js with (v-else="VARIBLE-NAME") -->
+      <div v-if="isVisible" class="box"></div>
+
+    </div>
+
+    <!-- Vue 3 script tag import -->
+    <script src="https://unpkg.com/vue@next"></script>
+
+    <!-- Script tag that connects to div id="app" main app div -->
+    <script>
+    // initialize the vue.js app with Vue.createApp({})
+      let app = Vue.createApp({
+        // with vue.js you can create an prediefined object that allows you to make fuction and retreive function within the html code
+        // data: fucntion { return {varibleName: INPUT DATATYPE(string, number, Boolean, charaters, etc)} }
+          data: function() {
+            return {
+                greeting: 'Hello Vue 3',
+                isVisible: false,
+                isVisible2: false
+            }
+          },
+          // with vue.js you can create an object with the methods object that allows you to create customs functions which can be used within the HTML body
+          // the method: { function() {fucntion body}}
+          methods: {
+              toggleBox() {
+                this.isVisible = !this.isVisible
+              },
+              greet(greeting){
+                console.log(greeting)
+              }
+          }
+      })
+      app.component('login-form', {
+        template: `
+          <form @submit.prevent="handleSubmit">
+            <h1> {{ title }} </h1>
+            <custom-input
+                v-for="(input, i) in inputs"
+                :key="i"
+                v-model="input.value"
+                :label="input.label"
+                :type="input.type"
+              />
+            <button>Log in</button>
+          </form>
+        `,
+        components: ['custom-input'],
+        data() {
+          return {
+            title: 'Login Form',
+            inputs: [
+                {
+                  label: 'Email',
+                  value: '',
+                  type: 'email'
+                },
+                {
+                  label: 'Password',
+                  value: '',
+                  type: 'password'
+                }
+            ]
+          }
+        },
+        methods: {
+          handleSubmit(){
+            console.log(this.inputs[0].value, this.inputs[1].value)
+          }
+         }
+
+      })
+      app.component('custom-input', {
+        template: `
+          <label>
+            {{ label }}
+            <input :type="type" v-model="inputValue">
+          </label>
+        `,
+        props: ['label', 'type', 'modelValue'],
+        computed: {
+          inputValue: {
+            get() {
+              return this.modelValue
+            },
+            set(value) {
+              console.log(value)
+              this.$emit('update:model', value)
+            }
+          }
+        }
+        // data() {
+        //   return {
+        //     inputValue: ''
+        //   }
+        // }
+
+      })
+      // app.mount attaches the app varible to the HTML id named to app within the top div
+      app.mount('#app')
+    </script>
+  </body>
+</html>

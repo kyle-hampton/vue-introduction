@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Vue 3 Basics</title>
+    <!-- Box Styling  -->
+    <style>
+      .box{
+        background-color: lightgreen;
+        height: 200px;
+        width: 200px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- to use vue.js you can use a div to link your vue.js app code to the HTML body -->
+    <div id="app" v-cloak>
+
+
+      <!-- toggle button applied to @ click function and assigned to the method toggleBox  -->
+      <!-- conneted to div named v-if isVisible and class box (shows if colored box is turned on or off) -->
+      <button @click="toggleBox"> Toggle Box</button>
+
+      <!-- You cna use if/if-else/else within vue.js with (v-if="VARIBLE-NAME") -->
+      <!-- You cna use if/if-else/else within vue.js with (v-if-else="VARIBLE-NAME") -->
+      <!-- You cna use if/if-else/else within vue.js with (v-else="VARIBLE-NAME") -->
+      <test-box v-if="isVisible" />
+
+    </div>
+
+    <!-- Vue 3 script tag import -->
+    <script src="https://unpkg.com/vue@next"></script>
+
+    <!-- Script tag that connects to div id="app" main app div -->
+    <script>
+    // initialize the vue.js app with Vue.createApp({})
+      let app = Vue.createApp({
+          data: function() {
+             return {
+                isVisible: false,
+              }
+          },
+          methods: {
+              toggleBox: function() {
+                this.isVisible = !this.isVisible
+              }
+          },
+          updated(){
+            console.log('updated')
+          }
+      })
+      app.component('test-box', {
+        template: `
+          <div class="box"></div>
+        `,
+        created() {
+          console.log('created')
+        },
+        mounted() {
+          console.log('mounted')
+        },
+        unmounted(){
+          console.log('unmounted')
+        }
+
+      })
+      // app.mount attaches the app varible to the HTML id named to app within the top div
+      app.mount('#app')
+    </script>
+  </body>
+</html>
